@@ -17,6 +17,22 @@ spec:
     - name: base_image
       value: quay.io/bradfordwagner/base
   templates:
+  - name: echo
+    inputs:
+      artifacts:
+      - name: git
+        path: /tmp/src
+      parameters:
+      - name: message
+    container:
+      image: alpine
+      command: [sh]
+      args:
+      - -lc
+      - |
+        ls -lh /tmp/src
+        cat /tmp/src/README.md
+#     command: [echo, "{{inputs.parameters.message}}"]
   - name: build-ansible-image
     inputs:
       parameters:
@@ -29,44 +45,56 @@ spec:
       tasks:
       - name: alpine
         templateRef:
-          name: kaniko-template
+          name: git-template
           template: main
+      - name: echo-readme
         arguments:
-          parameters:
-          - name: repo_name
-            value: "{{inputs.parameters.repo_name}}"
-          - name: tag
-            value: "{{inputs.parameters.tag}}-{{item.platform}}"
-          - name: push
-            value: "{{inputs.parameters.push}}"
-          - name: dockerfile
-            value: |
-              FROM {{inputs.parameters.base_image}}:{{inputs.parameters.upstream_tag}}-{{item.platform}}
-              RUN apk add git \
-                          ansible
+          artifacts:
+          - name: git
+            from: "{{tasks.alpine.outputs.artifacts.git}}" # this is the line giving me problems
+#           from: "{{dag.tasks.alpine.outputs.artifacts.git}}" # this is the line giving me problems
+          parameters: [{name: message, value: 'hello world'}]
+        dependencies: [alpine]
+        template: echo
+#       templateRef:
+#         name: kaniko-template
+#         template: main
+#       arguments:
+#         parameters:
+#         - name: repo_name
+#           value: "{{inputs.parameters.repo_name}}"
+#         - name: tag
+#           value: "{{inputs.parameters.tag}}-{{item.platform}}"
+#         - name: push
+#           value: "{{inputs.parameters.push}}"
+#         - name: dockerfile
+#           value: |
+#             FROM {{inputs.parameters.base_image}}:{{inputs.parameters.upstream_tag}}-{{item.platform}}
+#             RUN apk add git \
+#                         ansible
         withItems:
         - { platform: 'alpine_3.12' }
-        - { platform: 'alpine_3.13' }
-        - { platform: 'alpine_3.14' }
-      - name: ubuntu
-        templateRef:
-          name: kaniko-template
-          template: main
-        arguments:
-          parameters:
-          - name: repo_name
-            value: "{{inputs.parameters.repo_name}}"
-          - name: tag
-            value: "{{inputs.parameters.tag}}-{{item.platform}}"
-          - name: push
-            value: "{{inputs.parameters.push}}"
-          - name: dockerfile
-            value: |
-              FROM {{inputs.parameters.base_image}}:{{inputs.parameters.upstream_tag}}-{{item.platform}}
-              RUN apt update
-              RUN apt install software-properties-common -y
-              RUN add-apt-repository -y --update ppa:ansible/ansible
-              RUN apt install ansible -y
-        withItems:
-        - { platform: 'ubuntu_bionic' }
-        - { platform: 'ubuntu_focal' }
+#       - { platform: 'alpine_3.13' }
+#       - { platform: 'alpine_3.14' }
+#     - name: ubuntu
+#       templateRef:
+#         name: kaniko-template
+#         template: main
+#       arguments:
+#         parameters:
+#         - name: repo_name
+#           value: "{{inputs.parameters.repo_name}}"
+#         - name: tag
+#           value: "{{inputs.parameters.tag}}-{{item.platform}}"
+#         - name: push
+#           value: "{{inputs.parameters.push}}"
+#         - name: dockerfile
+#           value: |
+#             FROM {{inputs.parameters.base_image}}:{{inputs.parameters.upstream_tag}}-{{item.platform}}
+#             RUN apt update
+#             RUN apt install software-properties-common -y
+#             RUN add-apt-repository -y --update ppa:ansible/ansible
+#             RUN apt install ansible -y
+#       withItems:
+#       - { platform: 'ubuntu_bionic' }
+#       - { platform: 'ubuntu_focal' }
