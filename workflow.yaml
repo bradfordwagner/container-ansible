@@ -3,7 +3,7 @@ kind: Workflow
 metadata:
   generateName: ansible-image-
 spec:
-  entrypoint: build-ansible-image
+  entrypoint: main
   arguments:
     parameters:
     - name: tag
@@ -17,45 +17,62 @@ spec:
     - name: base_image
       value: quay.io/bradfordwagner/base
   templates:
-  - name: echo
-    inputs:
-      artifacts:
-      - name: git
-        path: /tmp/src
-      parameters:
-      - name: message
-    container:
-      image: alpine
-      command: [sh]
-      args:
-      - -lc
-      - |
-        ls -lh /tmp/src
-        cat /tmp/src/README.md
-#     command: [echo, "{{inputs.parameters.message}}"]
-  - name: build-ansible-image
-    inputs:
-      parameters:
-      - name: tag
-      - name: upstream_tag
-      - name: repo_name
-      - name: push
-      - name: base_image
+  - name: main
     dag:
       tasks:
-      - name: alpine
-        templateRef:
-          name: git-template
-          template: main
-      - name: echo-readme
+      - name: custom-dockerfile
         arguments:
-          artifacts:
-          - name: git
-            from: "{{tasks.alpine.outputs.artifacts.git}}" # this is the line giving me problems
-#           from: "{{dag.tasks.alpine.outputs.artifacts.git}}" # this is the line giving me problems
-          parameters: [{name: message, value: 'hello world'}]
-        dependencies: [alpine]
-        template: echo
+          parameters:
+          - name: git_repo
+            value: https://github.com/bradfordwagner/container-ansible.git
+          - name: git_version
+            value: feature/import-script
+        templateRef:
+          name: flavor-custom-dockerfile-template
+          template: main
+
+
+  # working import from prev stage
+# - name: echo
+#   inputs:
+#     artifacts:
+#     - name: git
+#       path: /tmp/src
+#     parameters:
+#     - name: message
+#   container:
+#     image: alpine
+#     command: [sh]
+#     args:
+#     - -lc
+#     - |
+#       ls -lh /tmp/src
+#       cat /tmp/src/README.md
+# - name: build-ansible-image
+#   inputs:
+#     parameters:
+#     - name: tag
+#     - name: upstream_tag
+#     - name: repo_name
+#     - name: push
+#     - name: base_image
+#   dag:
+#     tasks:
+#     - name: alpine
+#       templateRef:
+#         name: git-template
+#         template: main
+#     - name: echo-readme
+#       arguments:
+#         artifacts:
+#         - name: git
+#           from: "{{tasks.alpine.outputs.artifacts.git}}" # this is the line giving me problems
+#         parameters: [{name: message, value: 'hello world'}]
+#       dependencies: [alpine]
+#       template: echo
+
+
+
 #       templateRef:
 #         name: kaniko-template
 #         template: main
