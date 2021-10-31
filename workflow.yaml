@@ -42,6 +42,7 @@ spec:
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
               RUN echo custom ansible build
+              RUN sleep 10000000
               COPY install_ansible.sh /usr/local/bin
               RUN ls /usr/local/bin
               RUN . /usr/local/bin/install_ansible.sh
