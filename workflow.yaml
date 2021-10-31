@@ -47,9 +47,9 @@ spec:
           name: flavor-custom-dockerfile-template
           template: main
         withItems:
-#       - { os: alpine, platform: 'alpine_3.12' }
-#       - { os: alpine, platform: 'alpine_3.13' }
-#       - { os: alpine, platform: 'alpine_3.14' }
+        - { os: alpine, platform: 'alpine_3.12' }
+        - { os: alpine, platform: 'alpine_3.13' }
+        - { os: alpine, platform: 'alpine_3.14' }
         - { os: ubuntu, platform: 'ubuntu_bionic' }
-#       - { os: ubuntu, platform: 'ubuntu_focal' }
+        - { os: ubuntu, platform: 'ubuntu_focal' }
 
