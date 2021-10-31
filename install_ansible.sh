@@ -1,9 +1,9 @@
-function alpine() {
+alpine() {
   apk add git \
           ansible
 }
 
-function ubuntu() {
+ubuntu() {
   echo hello ubuntu
 # apt update
 # apt install software-properties-common -y
