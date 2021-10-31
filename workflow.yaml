@@ -53,7 +53,7 @@ spec:
         - { os: alpine, platform: 'alpine_3.12' }
 #       - { os: alpine, platform: 'alpine_3.13' }
 #       - { os: alpine, platform: 'alpine_3.14' }
-        - { os: ubuntu, platform: 'ubuntu_bionic' }
+#       - { os: ubuntu, platform: 'ubuntu_bionic' }
 #       - { os: ubuntu, platform: 'ubuntu_focal' }
 
 
