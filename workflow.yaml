@@ -42,11 +42,17 @@ spec:
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
               RUN echo custom ansible build
+              COPY install_ansible.sh /usr/local/bin
+              RUN ls /usr/local/bin
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
         withItems:
-          - { platform: 'alpine_3.12' }
+        - { platform: 'alpine_3.12' }
+        - { platform: 'alpine_3.13' }
+        - { platform: 'alpine_3.14' }
+        - { platform: 'ubuntu_bionic' }
+        - { platform: 'ubuntu_focal' }
 
 
   # working import from prev stage
