@@ -42,10 +42,11 @@ spec:
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
               RUN ls -lhR /tmp
-              COPY install_ansible.sh /usr/local/bin
-              RUN ls /usr/local/bin
-              RUN . /usr/local/bin/install_ansible.sh
-              RUN {{ item.os }}
+              RUN cat /tmp/src/README.md
+              #COPY install_ansible.sh /usr/local/bin
+              #RUN ls /usr/local/bin
+              #RUN . /usr/local/bin/install_ansible.sh
+              #RUN {{ item.os }}
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
