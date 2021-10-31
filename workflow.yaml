@@ -44,15 +44,17 @@ spec:
               RUN echo custom ansible build
               COPY install_ansible.sh /usr/local/bin
               RUN ls /usr/local/bin
+              RUN . /usr/local/bin/install_ansible.sh
+              RUN {{ item.os }}
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
         withItems:
-        - { platform: 'alpine_3.12' }
-#       - { platform: 'alpine_3.13' }
-#       - { platform: 'alpine_3.14' }
-        - { platform: 'ubuntu_bionic' }
-#       - { platform: 'ubuntu_focal' }
+        - { os: alpine, platform: 'alpine_3.12' }
+#       - { os: alpine, platform: 'alpine_3.13' }
+#       - { os: alpine, platform: 'alpine_3.14' }
+        - { os: ubuntu, platform: 'ubuntu_bionic' }
+#       - { os: ubuntu, platform: 'ubuntu_focal' }
 
 
   # working import from prev stage
