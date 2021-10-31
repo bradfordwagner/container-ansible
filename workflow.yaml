@@ -40,6 +40,7 @@ spec:
             value: "{{ inputs.parameters.repo_name }}"
           - name: dockerfile
             value: |
+              FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
               RUN echo custom ansible build
         templateRef:
           name: flavor-custom-dockerfile-template
