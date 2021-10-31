@@ -49,10 +49,10 @@ spec:
           template: main
         withItems:
         - { platform: 'alpine_3.12' }
-        - { platform: 'alpine_3.13' }
-        - { platform: 'alpine_3.14' }
+#       - { platform: 'alpine_3.13' }
+#       - { platform: 'alpine_3.14' }
         - { platform: 'ubuntu_bionic' }
-        - { platform: 'ubuntu_focal' }
+#       - { platform: 'ubuntu_focal' }
 
 
   # working import from prev stage
