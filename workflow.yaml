@@ -41,7 +41,6 @@ spec:
           - name: dockerfile
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
-              RUN ls -lhR /tmp
               COPY install_ansible.sh /usr/local/bin
               RUN ls /usr/local/bin
               RUN . /usr/local/bin/install_ansible.sh
