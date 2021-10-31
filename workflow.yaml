@@ -8,16 +8,21 @@ spec:
     parameters:
     - name: tag
       value: latest
-    - name: upstream_tag
-      value: 1.0.0
     - name: repo_name
       value: quay.io/bradfordwagner/ansible
     - name: push
       value: "--no-push"
-    - name: base_image
+    - name: upstream_repo
       value: quay.io/bradfordwagner/base
+    - name: upstream_tag
+      value: 1.0.0
   templates:
   - name: main
+    inputs:
+      parameters:
+      - name: upstream_repo
+      - name: upstream_tag
+      - name: repo_name
     dag:
       tasks:
       - name: custom-dockerfile
@@ -27,9 +32,20 @@ spec:
             value: https://github.com/bradfordwagner/container-ansible.git
           - name: git_version
             value: feature/import-script
+          - name: upstream_repo
+            value: "{{ inputs.parameters.upstream_repo }}"
+          - name: upstream_tag
+            value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
+          - name: repo_name
+            value: "{{ inputs.parameters.repo_name }}"
+          - name: dockerfile
+            value: |
+              RUN echo custom ansible build
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
+        withItems:
+          - { platform: 'alpine_3.12' }
 
 
   # working import from prev stage
@@ -89,8 +105,8 @@ spec:
 #             FROM {{inputs.parameters.base_image}}:{{inputs.parameters.upstream_tag}}-{{item.platform}}
 #             RUN apk add git \
 #                         ansible
-        withItems:
-        - { platform: 'alpine_3.12' }
+#       withItems:
+#       - { platform: 'alpine_3.12' }
 #       - { platform: 'alpine_3.13' }
 #       - { platform: 'alpine_3.14' }
 #     - name: ubuntu
