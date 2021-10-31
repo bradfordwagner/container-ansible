@@ -1,4 +1,4 @@
-function alpine () {
+function alpine() {
   apk add git \
           ansible
 }
