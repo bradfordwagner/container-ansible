@@ -17,42 +17,51 @@ spec:
     - name: upstream_repo
       value: quay.io/bradfordwagner/base
     - name: upstream_tag
-      value: 1.0.0
+      value: 1.2.0
   templates:
   - name: main
     inputs:
       parameters:
       - name: git_version
+      - name: tag
       - name: upstream_repo
       - name: upstream_tag
       - name: repo_name
+      - name: push
     dag:
       tasks:
       - name: custom-dockerfile
         arguments:
           parameters:
           - name: git_repo
-            value: https://github.com/bradfordwagner/container-ansible.git
+            value: https://github.com/andrewrothstein/docker-ansible.git
           - name: git_version
-            value: "{{ inputs.parameters.git_version }}"
+            value: master
           - name: upstream_repo
             value: "{{ inputs.parameters.upstream_repo }}"
           - name: upstream_tag
             value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
           - name: repo_name
             value: "{{ inputs.parameters.repo_name }}"
+          - name: push
+            value: "{{ inputs.parameters.push }}"
+          - name: tag
+            value: "{{ inputs.parameters.tag }}-{{ item.platform }}"
           - name: dockerfile
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
-              COPY install_ansible.sh /usr/local/bin
-              RUN . /usr/local/bin/install_ansible.sh; {{ item.os }}
+              ENV LANG C.UTF-8
+              ENV LC_ALL C.UTF-8
+              COPY . .
+              RUN . ./ansible-install-lib; install_{{ item.os }}_{{ item.dashver }}
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
         withItems:
-        - { os: alpine, platform: 'alpine_3.12' }
-        - { os: alpine, platform: 'alpine_3.13' }
-        - { os: alpine, platform: 'alpine_3.14' }
-        - { os: ubuntu, platform: 'ubuntu_bionic' }
-        - { os: ubuntu, platform: 'ubuntu_focal' }
+        - { os: alpine, platform: 'alpine_3.13', dashver: "3_13" }
+        - { os: alpine, platform: 'alpine_3.14', dashver: "3_14" }
+        - { os: ubuntu, platform: ubuntu_bionic, dashver: bionic }
+        - { os: ubuntu, platform: ubuntu_focal, dashver: focal }
+        - { os: debian, platform: debian_buster, dashver: buster }
+        - { os: debian, platform: debian_bullseye, dashver: bullseye }
 
