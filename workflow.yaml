@@ -34,9 +34,10 @@ spec:
         arguments:
           parameters:
           - name: git_repo
-            value: https://github.com/andrewrothstein/docker-ansible.git
+            # forked from: https://github.com/andrewrothstein/docker-ansible.git
+            value: https://github.com/bradfordwagner/docker-ansible.git
           - name: git_version
-            value: master
+            value: feature/destroy
           - name: upstream_repo
             value: "{{ inputs.parameters.upstream_repo }}"
           - name: upstream_tag
@@ -52,8 +53,12 @@ spec:
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
               ENV LANG C.UTF-8
               ENV LC_ALL C.UTF-8
+              ENV ANSIBLE_OS {{ item.os }}
+              ENV HOME /root
+              WORKDIR ${HOME}
               COPY . .
               RUN . ./ansible-install-lib; install_{{ item.os }}_{{ item.dashver }}
+              COPY ./ansible-destroy     /usr/local/bin
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
