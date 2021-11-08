@@ -59,6 +59,7 @@ spec:
               COPY . .
               RUN . ./ansible-install-lib; install_{{ item.os }}_{{ item.dashver }}
               COPY ./ansible-destroy     /usr/local/bin
+              RUN rm -rf * # cleanup
         templateRef:
           name: flavor-custom-dockerfile-template
           template: main
