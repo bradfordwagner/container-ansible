@@ -6,48 +6,43 @@ spec:
   entrypoint: main
   arguments:
     parameters:
-    - name: git_version
-      value: main
-    - name: tag
-      value: latest
-    - name: repo_name
-      value: quay.io/bradfordwagner/ansible
-    - name: push
-      value: ""
-    - name: upstream_repo
-      value: quay.io/bradfordwagner/base
-    - name: upstream_tag
-      value: 1.2.0
+      - name: git_ref_type
+        value: branches
+      - name: git_version
   templates:
   - name: main
     inputs:
       parameters:
       - name: git_version
-      - name: tag
+      - name: git_ref_type
       - name: upstream_repo
+        value: quay.io/bradfordwagner/base
       - name: upstream_tag
+        value: 1.2.0
       - name: repo_name
-      - name: push
+        value: quay.io/bradfordwagner/ansible
     dag:
       tasks:
       - name: custom-dockerfile
         arguments:
           parameters:
+          # source files into our build container from this repo
+          # forked from: https://github.com/andrewrothstein/docker-ansible.git
           - name: git_repo
-            # forked from: https://github.com/andrewrothstein/docker-ansible.git
             value: https://github.com/bradfordwagner/docker-ansible.git
           - name: git_version
             value: feature/destroy
+
           - name: upstream_repo
             value: "{{ inputs.parameters.upstream_repo }}"
           - name: upstream_tag
             value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
           - name: repo_name
             value: "{{ inputs.parameters.repo_name }}"
-          - name: push
-            value: "{{ inputs.parameters.push }}"
-          - name: tag
-            value: "{{ inputs.parameters.tag }}-{{ item.platform }}"
+          - name: platform
+            value: "{{ item.platform }}"
+#         - name: tag
+#           value: "{{ inputs.parameters.tag }}-{{ item.platform }}"
           - name: dockerfile
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
@@ -62,12 +57,11 @@ spec:
               RUN rm -rf * # cleanup
         templateRef:
           name: flavor-custom-dockerfile-template
-          template: main
+          template: "{{ inputs.parameters.git_ref_type }}"
         withItems:
-        - { os: alpine, platform: 'alpine_3.13', dashver: "3_13" }
-        - { os: alpine, platform: 'alpine_3.14', dashver: "3_14" }
-        - { os: ubuntu, platform: ubuntu_bionic, dashver: bionic }
-        - { os: ubuntu, platform: ubuntu_focal, dashver: focal }
-        - { os: debian, platform: debian_buster, dashver: buster }
-        - { os: debian, platform: debian_bullseye, dashver: bullseye }
-
+        - { os: alpine, platform: 'alpine_3.13'  , dashver: "3_13" }
+#       - { os: alpine, platform: 'alpine_3.14'  , dashver: "3_14" }
+#       - { os: ubuntu, platform: ubuntu_bionic  , dashver: bionic }
+#       - { os: ubuntu, platform: ubuntu_focal   , dashver: focal }
+#       - { os: debian, platform: debian_buster  , dashver: buster }
+#       - { os: debian, platform: debian_bullseye, dashver: bullseye }
