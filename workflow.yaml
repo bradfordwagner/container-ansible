@@ -26,13 +26,10 @@ spec:
       - name: custom-dockerfile
         arguments:
           parameters:
-          # source files into our build container from this repo
-          # forked from: https://github.com/andrewrothstein/docker-ansible.git
           - name: git_repo
-            value: https://github.com/bradfordwagner/docker-ansible.git
+            value: https://github.com/bradfordwagner/container-ansible
           - name: git_version
-            value: feature/destroy
-
+            value: "{{ inputs.parameters.git_version }}"
           - name: upstream_repo
             value: "{{ inputs.parameters.upstream_repo }}"
           - name: upstream_tag
@@ -63,3 +60,4 @@ spec:
         - { os: ubuntu, platform: ubuntu_focal   , dashver: focal }
         - { os: debian, platform: debian_buster  , dashver: buster }
         - { os: debian, platform: debian_bullseye, dashver: bullseye }
+

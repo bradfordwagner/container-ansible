@@ -1,0 +1,590 @@
+ANSIBLE_VER=4.1.0
+
+# install_pip /usr/bin/python => /usr/bin/python /usr/local/bin/get-pip.py
+install_pip () {
+    local python_interpreter=$1
+    local url=https://bootstrap.pypa.io/get-pip.py
+    local getpippy=/tmp/get-pip.py
+
+    echo downloading from $url to $getpippy...
+    wget -O $getpippy $url
+
+    echo installing with $python_interpreter...
+    $python_interpreter $getpippy
+    rm $getpippy
+}
+
+install_pip_archlinux () {
+    pacman \
+        -Syu \
+        --noconfirm \
+        python-pip
+    pip install --upgrade pip
+}
+
+install_pip_fedora () {
+    local os_ver=$1
+    local pip=$2
+
+    if [ "$os_ver" -ge "29" ];
+    then
+        dnf install -y python3-pip
+    else
+        dnf install -y python-pip
+        $pip install --upgrade pip
+    fi
+}
+
+install_pip_ubuntu () {
+    install_pip $1
+}
+
+install_pip_debian () {
+    install_pip $1
+}
+
+install_pip_centos () {
+    install_pip $1
+}
+
+install_pip_alpine () {
+    install_pip $1
+}
+
+pip_install () {
+    local pip=$1
+    local pkgs=$2
+    $pip install --no-cache-dir $pkgs
+}
+
+# pip_install_ansible pip3 2.8.4 => pip3 install ansible==2.8.4
+pip_install_ansible () {
+    local pip=$1
+    local ansible_ver=$2
+    pip_install $pip ansible==$ansible_ver
+}
+
+ansible_ping_localhost () {
+    ansible-galaxy install -r requirements.yml
+    ansible --version \
+        && ansible all --list-hosts \
+        && ansible localhost -m ping
+}
+
+write_local_cfg () {
+    mkdir -p /etc/ansible
+    cat >/etc/ansible/ansible.cfg <<HERE
+[defaults]
+inventory = /etc/ansible/inventories
+transport = local
+callbacks_enabled = ansible.posix.timer,ansible.posix.profile_tasks
+HERE
+}
+
+write_inventories () {
+    local os_group_name=$1
+    local ansible_python_interpreter=$2
+
+    mkdir -p /etc/ansible/inventories
+    cat >/etc/ansible/inventories/localhost <<HERE
+localhost
+
+[$os_group_name]
+localhost
+
+[$os_group_name:vars]
+ansible_python_interpreter=$ansible_python_interpreter
+HERE
+}
+
+write_dockerfile () {
+    local upstream_registry=$1
+    local upstream_namespace=$2
+    local upstream_repo=$3
+
+    local os=$4
+    local dotver=$5
+    local dashver=$6
+
+    local fq_upstream=${upstream_registry}/${upstream_namespace}/${upstream_repo}:${dotver}
+    if [ "${upstream_namespace}" = "" ];
+    then
+        fq_upstream=${upstream_registry}/${upstream_repo}:${dotver}
+    fi
+
+    dockerfile=Dockerfile.${os}_${dotver}
+    echo writing Dockerfile: $dockerfile
+    cat > $dockerfile <<EOF
+FROM $fq_upstream
+MAINTAINER "Andrew Rothstein" andrew.rothstein@gmail.com
+
+ADD ansible-install-lib ansible-install-lib
+ADD install.sh install.sh
+ADD requirements.yml requirements.yml
+RUN ./install.sh ${os} ${dashver}
+EOF
+}
+
+write_dockerfile_gentoo () {
+    local dotver=$1
+    local dashver=$2
+    write_dockerfile docker.io gentoo stage3-amd64 gentoo $dotver $dashver
+}
+
+write_dockerfile_simple () {
+    local os=$1
+    local dotver=$2
+    local dashver=$3
+    write_dockerfile docker.io library $os $os $dotver $dashver
+}
+
+write_dockerfile_alpine () {
+    write_dockerfile_simple alpine $1 $2
+}
+
+write_dockerfile_archlinux () {
+    write_dockerfile_simple archlinux $1 $2
+}
+
+write_dockerfile_centos () {
+    write_dockerfile_simple centos $1 $2
+}
+
+write_dockerfile_rockylinux () {
+    local dotver=$1
+    local dashver=$2
+    write_dockerfile docker.io rockylinux rockylinux rockylinux $dotver $dashver
+}
+
+write_dockerfile_debian () {
+    write_dockerfile_simple debian $1 $2
+}
+
+write_dockerfile_ubuntu () {
+    write_dockerfile_simple ubuntu $1 $2
+}
+
+write_dockerfile_fedora () {
+    local dotver=$1
+    local dashver=$2
+    if [ "$dotver" -ge "24" ];
+    then
+        write_dockerfile registry.fedoraproject.org '' fedora fedora $1 $2
+    else
+        write_dockerfile_simple fedora $dotver $dashver
+    fi
+}
+
+write_dockerfile_ubi () {
+    local major_ver=$1
+    local dotver=$2
+    local dashver=$3
+    write_dockerfile registry.access.redhat.com ubi${major_ver} ubi ubi${major_ver} $dotver $dashver
+}
+
+write_dockerfile_ubi8 () {
+    write_dockerfile_ubi 8 $1 $2
+}
+
+PYTHON_MIRROR=https://www.python.org/ftp/python
+install_python () {
+    local python_ver=$1
+    local python_name=Python-$python_ver
+    local python_tgz=${python_name}.tgz
+    wget $PYTHON_MIRROR/$python_ver/$python_tgz
+    tar zxvf $python_tgz
+    cd $python_name
+    ./configure --enable-optimizations
+    make altinstall
+    cd ..
+    rm -rf $python_tgz $python_name
+}
+
+install_fq_pre_dnf() {
+    dnf update -y
+    dnf install -y wget ${1:-python3}
+}
+
+install_fq_pre_yum() {
+    yum update -y
+    yum install -y wget ${1:-python3}
+}
+
+install_fq_pre_centos () {
+    local os_ver=$1
+
+    if [ "$os_ver" -gt 7 ];
+    then
+        install_fq_pre_dnf
+    else
+        install_fq_pre_yum python
+    fi
+}
+
+install_fq_pre_ubi () {
+    install_fq_pre_dnf python36
+}
+
+install_fq_pre_fedora () {
+    local os_ver=$1
+    dnf update -y
+    dnf install -y systemd
+
+    if [ "$os_ver" -ge "29" ];
+    then
+        install_fq_pre_dnf
+    else
+        install_fq_pre_dnf python
+    fi
+}
+
+install_fq_post_yum() {
+    yum clean all
+}
+
+install_fq_post_dnf() {
+    dnf clean all
+}
+
+install_fq_post_centos () {
+    local os_ver=$1
+
+    if [ "$os_ver" -gt 7 ];
+    then
+        install_fq_post_dnf
+    else
+        install_fq_post_yum
+    fi
+}
+
+install_fq_post_ubi () {
+    install_fq_post_dnf
+}
+
+install_fq_post_fedora () {
+    install_fq_post_dnf
+}
+
+install_fq_pre_alpine () {
+    apk update
+    apk upgrade
+    apk add \
+        python3 \
+        python3-dev \
+        build-base \
+        libffi-dev \
+        openssl-dev \
+        wget \
+        ca-certificates \
+        rust \
+        cargo
+}
+
+install_fq_post_alpine () {
+    apk del \
+        build-base \
+        libffi-dev \
+        openssl-dev \
+        rust \
+        cargo
+    rm -rf /var/cache/apk/*
+}
+
+install_fq_pre_ubuntu () {
+    os_ver=$1
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install -y wget python3 language-pack-en
+
+    if [ "$os_ver" = "bionic" ] || [ "$os_ver" = "focal" ];
+    then
+       apt-get install -y python3-distutils
+    fi
+}
+
+install_fq_post_ubuntu () {
+    apt-get clean -y
+}
+
+install_fq_pre_archlinux () {
+    pacman \
+        -Syu \
+        --noconfirm \
+        glibc \
+        python \
+        ca-certificates \
+        libffi
+}
+
+install_fq_pre_debian () {
+    local os_ver=$1
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install -y wget
+
+    if [ "$os_ver" = "jessie" ];
+    then
+        apt-get install -y python
+    elif [ "$os_ver" = "stretch" ];
+    then
+        apt-get install -y python3
+    else
+        apt-get install -y python3 python3-distutils
+    fi
+}
+
+install_fq_post_debian () {
+    apt-get clean
+}
+
+install_fq_fedora () {
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    install_fq_pre_fedora $os_ver
+
+    install_pip_fedora $os_ver $pip
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_fedora
+
+    write_local_cfg
+    write_inventories fedora_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_archlinux () {
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    install_fq_pre_archlinux
+
+    install_pip_archlinux $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    write_local_cfg
+    write_inventories archlinux_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_gentoo () {
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    emerge-webrsync
+    # for equery
+    emerge app-portage/gentoolkit
+    install_pip $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    write_local_cfg
+    write_inventories gentoo_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_ubuntu () {
+
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    install_fq_pre_ubuntu $os_ver
+
+    install_pip_ubuntu $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_ubuntu
+
+    write_local_cfg
+    write_inventories ubuntu_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_debian () {
+
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    install_fq_pre_debian $os_ver
+
+    install_pip_debian $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_debian
+
+    write_local_cfg
+    write_inventories debian_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_centos () {
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    install_fq_pre_centos $os_ver
+
+    install_pip_centos $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_centos
+
+    write_local_cfg
+    write_inventories centos_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_rockylinux () {
+    local os_major=$1
+    local os_minor=$2
+    local python_interpreter=$3
+    local pip=$4
+    local ansible_ver=$5
+
+    install_fq_pre_dnf
+
+    install_pip $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_dnf
+
+    write_local_cfg
+    write_inventories rockylinux_${os_major}_${os_minor} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_ubi () {
+    local os_ver=$1
+    local python_interpreter=$2
+    local pip=$3
+    local ansible_ver=$4
+
+    install_fq_pre_ubi
+
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_ubi
+
+    write_local_cfg
+    write_inventories ubi_minimal_${os_ver} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_alpine () {
+    local os_major=$1
+    local os_minor=$2
+    local python_interpreter=$3
+    local pip=$4
+    local ansible_ver=$5
+
+    install_fq_pre_alpine
+
+    install_pip_alpine $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_alpine
+
+    write_local_cfg
+    write_inventories alpine_${os_major}_${os_minor} $python_interpreter
+    ansible_ping_localhost
+}
+
+install_fq_alpine_edge () {
+    local python_interpreter=$1
+    local pip=$2
+    local ansible_ver=$3
+
+    install_fq_pre_alpine
+
+    install_pip_alpine $python_interpreter
+    pip_install_ansible $pip $ansible_ver
+
+    install_fq_post_alpine
+
+    write_local_cfg
+    write_inventories alpine_edge $python_interpreter
+    ansible_ping_localhost
+}
+
+install_debian_stretch () {
+    install_fq_debian stretch /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_debian_bullseye () {
+    install_fq_debian bullseye /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_debian_buster () {
+    install_fq_debian buster /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_fedora_34 () {
+    install_fq_fedora 34 /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_fedora_35 () {
+    install_fq_fedora 35 /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_archlinux_latest () {
+    install_fq_archlinux latest /usr/sbin/python pip $ANSIBLE_VER
+}
+
+install_ubuntu () {
+    local os_ver=$1
+    install_fq_ubuntu $os_ver /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_ubuntu_bionic () {
+    install_ubuntu bionic
+}
+
+install_ubuntu_focal () {
+    install_ubuntu focal
+}
+
+install_ubuntu_xenial () {
+    install_ubuntu xenial
+}
+
+install_centos_8 () {
+    install_fq_centos 8 /usr/bin/python3 pip $ANSIBLE_VER
+}
+
+install_rockylinux_8_4 () {
+    install_fq_rockylinux 8 4 /usr/bin/python3 pip $ANSIBLE_VER
+}
+
+install_alpine_3_13 () {
+    install_fq_alpine 3 13 /usr/bin/python3 pip $ANSIBLE_VER
+}
+
+install_alpine_3_14 () {
+    install_fq_alpine 3 14 /usr/bin/python3 pip $ANSIBLE_VER
+}
+
+install_alpine_edge () {
+    install_fq_alpine_edge /usr/bin/python3 pip $ANSIBLE_VER
+}
+
+install_ubi8_8 () {
+    install_fq_ubi 8 /usr/bin/python3 pip3 $ANSIBLE_VER
+}
+
+install_ubi8_8_2 () {
+    install_ubi8_8
+}
+
+install_ubi8_8_3 () {
+    install_ubi8_8
+}
