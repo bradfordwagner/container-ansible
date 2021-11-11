@@ -39,10 +39,12 @@ spec:
             value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
           - name: repo_name
             value: "{{ inputs.parameters.repo_name }}"
+          - name: push
+            value: "{{ inputs.parameters.push }}"
+          - name: tag
+            value: "{{ inputs.parameters.tag }}-{{ item.platform }}"
           - name: platform
             value: "{{ item.platform }}"
-#         - name: tag
-#           value: "{{ inputs.parameters.tag }}-{{ item.platform }}"
           - name: dockerfile
             value: |
               FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
