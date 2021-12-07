@@ -18,7 +18,7 @@ spec:
       - name: upstream_repo
         value: quay.io/bradfordwagner/base
       - name: upstream_tag
-        value: 2.0.0
+        value: 2.1.0
       - name: repo_name
         value: quay.io/bradfordwagner/ansible
     dag:
@@ -36,11 +36,12 @@ spec:
             value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
           - name: repo_name
             value: "{{ inputs.parameters.repo_name }}"
+          - name: runtime_platforms
+            value: "{{ item.runtime_platforms }}"
           - name: platform
             value: "{{ item.platform }}"
           - name: dockerfile
             value: |
-              FROM {{ inputs.parameters.upstream_repo }}:{{ inputs.parameters.upstream_tag }}-{{ item.platform }}
               ENV LANG C.UTF-8
               ENV LC_ALL C.UTF-8
               ENV ANSIBLE_OS {{ item.os }}
@@ -54,10 +55,11 @@ spec:
           name: flavor-custom-dockerfile-template
           template: "{{ inputs.parameters.git_ref_type }}"
         withItems:
-        - { os: alpine, platform: 'alpine_3.13'  , dashver: "3_13" }
-        - { os: alpine, platform: 'alpine_3.14'  , dashver: "3_14" }
-        - { os: ubuntu, platform: ubuntu_bionic  , dashver: bionic }
-        - { os: ubuntu, platform: ubuntu_focal   , dashver: focal }
-        - { os: debian, platform: debian_buster  , dashver: buster }
-        - { os: debian, platform: debian_bullseye, dashver: bullseye }
+        - { os: alpine, platform: alpine_3.13    , dashver: 3_13    , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: alpine, platform: alpine_3.14    , dashver: 3_14    , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: ubuntu, platform: ubuntu_bionic  , dashver: bionic  , runtime_platforms: [linux/amd64, linux/386]  }
+        - { os: debian, platform: debian_buster  , dashver: buster  , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: debian, platform: debian_bullseye, dashver: bullseye, runtime_platforms: [linux/amd64, linux/386] }
+        # missing from registry
+        # - { os: ubuntu, platform: ubuntu_focal   , dashver: focal   , runtime_platforms: [linux/amd64, linux/arm, linux/arm64, linux/ppc64le, linux/riscv64 , linux/s390x] }
 
