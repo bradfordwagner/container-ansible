@@ -48,18 +48,18 @@ spec:
               ENV HOME /root
               WORKDIR ${HOME}
               COPY . .
-              RUN . ./ansible-install-lib; install_{{ item.os }}_{{ item.dashver }}
+              RUN . ./ansible-install-lib; install_{{ item.os }} {{ item.os_version }}
               COPY ./ansible-destroy     /usr/local/bin
               RUN rm -rf * # cleanup
         templateRef:
           name: flavor-custom-dockerfile-template
           template: "{{ inputs.parameters.git_ref_type }}"
         withItems:
-        - { os: alpine, platform: 'alpine_3.13'  , dashver: "3_13"  , runtime_platforms: [linux/amd64, linux/386] }
-        - { os: alpine, platform: 'alpine_3.14'  , dashver: "3_14"  , runtime_platforms: [linux/amd64, linux/386] }
-        - { os: ubuntu, platform: ubuntu_bionic  , dashver: bionic  , runtime_platforms: [linux/amd64, linux/386]  }
-        - { os: debian, platform: debian_buster  , dashver: buster  , runtime_platforms: [linux/amd64, linux/386] }
-        - { os: debian, platform: debian_bullseye, dashver: bullseye, runtime_platforms: [linux/amd64, linux/386] }
+        - { os: alpine, platform: 'alpine_3.13'  , os_version: "3.13"  , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: alpine, platform: 'alpine_3.14'  , os_version: "3.14"  , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: ubuntu, platform: ubuntu_bionic  , os_version: bionic  , runtime_platforms: [linux/amd64, linux/386]  }
+        - { os: debian, platform: debian_buster  , os_version: buster  , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: debian, platform: debian_bullseye, os_version: bullseye, runtime_platforms: [linux/amd64, linux/386] }
         # missing from registry
         # - { os: ubuntu, platform: ubuntu_focal   , dashver: focal   , runtime_platforms: [linux/amd64, linux/arm, linux/arm64, linux/ppc64le, linux/riscv64 , linux/s390x] }
 
