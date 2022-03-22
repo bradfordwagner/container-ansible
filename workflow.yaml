@@ -55,8 +55,8 @@ spec:
           name: flavor-custom-dockerfile-template
           template: "{{ inputs.parameters.git_ref_type }}"
         withItems:
-        - { os: alpine, platform: alpine_3.13    , dashver: 3_13    , runtime_platforms: [linux/amd64, linux/386] }
-        - { os: alpine, platform: alpine_3.14    , dashver: 3_14    , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: alpine, platform: 'alpine_3.13'  , dashver: "3_13"  , runtime_platforms: [linux/amd64, linux/386] }
+        - { os: alpine, platform: 'alpine_3.14'  , dashver: "3_14"  , runtime_platforms: [linux/amd64, linux/386] }
         - { os: ubuntu, platform: ubuntu_bionic  , dashver: bionic  , runtime_platforms: [linux/amd64, linux/386]  }
         - { os: debian, platform: debian_buster  , dashver: buster  , runtime_platforms: [linux/amd64, linux/386] }
         - { os: debian, platform: debian_bullseye, dashver: bullseye, runtime_platforms: [linux/amd64, linux/386] }
