@@ -34,7 +34,7 @@ spec:
             value: "{{ inputs.parameters.upstream_repo }}"
           - name: upstream_tag
             value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
-          - name: upstream_tag_suffix
+          - name: tag_suffix # forms git_version-platform
             value: "-{{ item.platform }}"
           - name: repo_name
             value: "{{ inputs.parameters.repo_name }}"
