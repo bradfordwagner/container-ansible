@@ -34,6 +34,8 @@ spec:
             value: "{{ inputs.parameters.upstream_repo }}"
           - name: upstream_tag
             value: "{{ inputs.parameters.upstream_tag }}-{{ item.platform }}"
+          - name: upstream_repo_name_override
+            value: "{{ item.platform }}"
           - name: repo_name
             value: "{{ inputs.parameters.repo_name }}"
           - name: runtime_platforms
