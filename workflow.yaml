@@ -18,7 +18,7 @@ spec:
       - name: upstream_repo
         value: quay.io/bradfordwagner/base
       - name: upstream_tag
-        value: 2.2.0
+        value: 2.2.2
       - name: repo_name
         value: quay.io/bradfordwagner/ansible
     dag:
@@ -57,11 +57,11 @@ spec:
           name: flavor-custom-dockerfile-template
           template: "{{ inputs.parameters.git_ref_type }}"
         withItems:
-        - { os: alpine, platform: 'alpine_3.13'  , os_version: "3.13"  , runtime_platforms: [linux/amd64] }
-        - { os: alpine, platform: 'alpine_3.14'  , os_version: "3.14"  , runtime_platforms: [linux/amd64] }
-        - { os: ubuntu, platform: ubuntu_bionic  , os_version: bionic  , runtime_platforms: [linux/amd64] }
-        - { os: debian, platform: debian_buster  , os_version: buster  , runtime_platforms: [linux/amd64] }
-        - { os: debian, platform: debian_bullseye, os_version: bullseye, runtime_platforms: [linux/amd64] }
+        - { os: alpine , platform: 'alpine_3.13'   , os_version: "3.13"   , runtime_platforms: [linux/amd64] }
+        - { os: alpine , platform: 'alpine_3.14'   , os_version: "3.14"   , runtime_platforms: [linux/amd64] }
+        - { os: ubuntu , platform: ubuntu_bionic   , os_version: bionic   , runtime_platforms: [linux/amd64] }
+        - { os: ubuntu , platform: ubuntu_focal    , os_version: focal    , runtime_platforms: [linux/amd64] }
+        - { os: debian , platform: debian_buster   , os_version: buster   , runtime_platforms: [linux/amd64] }
+        - { os: debian , platform: debian_bullseye , os_version: bullseye , runtime_platforms: [linux/amd64] }
         # missing from registry
-        # - { os: ubuntu, platform: ubuntu_focal   , dashver: focal   , runtime_platforms: [linux/amd64, linux/arm, linux/arm64, linux/ppc64le, linux/riscv64 , linux/s390x] }
 
