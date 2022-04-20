@@ -65,5 +65,4 @@ spec:
         - { os: ubuntu , platform: ubuntu_focal    , os_version: focal    , runtime_platforms: [linux/amd64, linux/arm64] }
         - { os: debian , platform: debian_buster   , os_version: buster   , runtime_platforms: [linux/amd64, linux/arm64] }
         - { os: debian , platform: debian_bullseye , os_version: bullseye , runtime_platforms: [linux/amd64, linux/arm64] }
-        # missing from registry
 
