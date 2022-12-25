@@ -69,3 +69,7 @@ spec:
 #       - { os: arch , platform: arch , os_version: arch , runtime_platforms: [linux/amd64 , linux/arm64] }
         - { os: archlinux , platform: archlinux_latest , os_version: archlinux , runtime_platforms: [linux/amd64] }
 
+
+
+          # NEED TO MOVE ANSIBLE TO 7.1.0
+
