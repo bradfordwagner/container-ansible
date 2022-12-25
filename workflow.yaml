@@ -67,5 +67,5 @@ spec:
 #       - { os: debian , platform: debian_bullseye , os_version: bullseye , runtime_platforms: [linux/amd64 , linux/arm64] }
 #       - { os: debian , platform: debian_bookworm , os_version: bookworm , runtime_platforms: [linux/amd64 , linux/arm64] }
 #       - { os: arch , platform: arch , os_version: arch , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: arch , platform: arch , os_version: archlinux , runtime_platforms: [linux/amd64] }
+        - { os: archlinux , platform: archlinux_latest , os_version: archlinux , runtime_platforms: [linux/amd64] }
 
