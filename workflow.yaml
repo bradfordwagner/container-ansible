@@ -59,12 +59,12 @@ spec:
           name: flavor-custom-dockerfile-template
           template: "{{ inputs.parameters.git_ref_type }}"
         withItems:
-        - { os: alpine , platform: alpine_3.16     , os_version: 3.16     , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: alpine , platform: alpine_3.17     , os_version: 3.17     , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: ubuntu , platform: ubuntu_focal    , os_version: focal    , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: ubuntu , platform: ubuntu_kinetic  , os_version: kinetic  , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: ubuntu , platform: ubuntu_lunar    , os_version: lunar    , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: debian , platform: debian_bullseye , os_version: bullseye , runtime_platforms: [linux/amd64 , linux/arm64] }
-        - { os: debian , platform: debian_bookworm , os_version: bookworm , runtime_platforms: [linux/amd64 , linux/arm64] }
+        - { os: alpine    , platform: alpine_3.16      , os_version: 3.16      , runtime_platforms: [linux/amd64    , linux/arm64] }
+        - { os: alpine    , platform: alpine_3.17      , os_version: 3.17      , runtime_platforms: [linux/amd64    , linux/arm64] }
+        - { os: ubuntu    , platform: ubuntu_focal     , os_version: focal     , runtime_platforms: [linux/amd64    , linux/arm64] }
+        - { os: ubuntu    , platform: ubuntu_kinetic   , os_version: kinetic   , runtime_platforms: [linux/amd64    , linux/arm64] }
+        - { os: ubuntu    , platform: ubuntu_lunar     , os_version: lunar     , runtime_platforms: [linux/amd64    , linux/arm64] }
+        - { os: debian    , platform: debian_bullseye  , os_version: bullseye  , runtime_platforms: [linux/amd64    , linux/arm64] }
+        - { os: debian    , platform: debian_bookworm  , os_version: bookworm  , runtime_platforms: [linux/amd64    , linux/arm64] }
         - { os: archlinux , platform: archlinux_latest , os_version: archlinux , runtime_platforms: [linux/amd64] }
 
