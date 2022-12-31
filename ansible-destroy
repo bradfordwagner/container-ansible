@@ -57,7 +57,7 @@ destroy_alpine () {
 }
 
 destroy_archlinux () {
-  # empty and naughty for now
+    echo creating destroy placeholder
 }
 
 ansible_destroy
