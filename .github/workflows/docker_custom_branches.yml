@@ -169,7 +169,7 @@ jobs:
       - name: task=branches
         run: |
           
-          export v='{"platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bullseye"}'
+          export v='{"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bullseye"}'
           task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-debian_bullseye             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=latest             is_tag=false
-            v={"platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bullseye"}
+            v={"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bullseye"}
 
