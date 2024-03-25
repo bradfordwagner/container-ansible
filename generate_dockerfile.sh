@@ -3,5 +3,5 @@
 v=$1
 os=$(echo ${v} | jq -r '.os')
 cat <<FOF
-RUN . ./install_ansible.sh ${os}
+RUN ./install_ansible.sh ${os}
 FOF
