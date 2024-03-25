@@ -39,7 +39,6 @@ ${os}_deps
 cd
 python3 -m venv myenv
 . myenv/bin/activate
-# source myenv/bin/activate
 
 # install pip: https://pip.pypa.io/en/stable/installation/
 wget https://bootstrap.pypa.io/get-pip.py

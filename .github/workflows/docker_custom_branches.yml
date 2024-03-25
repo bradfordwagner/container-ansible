@@ -139,3 +139,37 @@ jobs:
           task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-debian_bookworm             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=latest             is_tag=false
             v={"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bookworm"}
 
+  custom_4:
+    name: base:3.0.0-debian_bullseye
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=branches
+        run: |
+          
+          export v='{"platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bullseye"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-debian_bullseye             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=latest             is_tag=false
+            v={"platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bullseye"}
+
