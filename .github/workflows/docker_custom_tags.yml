@@ -1,0 +1,210 @@
+name: docker-custom-tags
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  custom_0:
+    name: base:3.0.0-alpine_3.18
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=tags
+        run: |
+          
+          export v='{"os":"alpine","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-alpine_3.18"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-alpine_3.18             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=${{ github.ref_name }}             is_tag=true
+            v={"os":"alpine","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-alpine_3.18"}
+
+  custom_1:
+    name: base:3.0.0-alpine_3.19
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=tags
+        run: |
+          
+          export v='{"os":"alpine","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-alpine_3.19"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-alpine_3.19             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=${{ github.ref_name }}             is_tag=true
+            v={"os":"alpine","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-alpine_3.19"}
+
+  custom_2:
+    name: base:3.0.0-archlinux_latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=tags
+        run: |
+          
+          export v='{"os":"arch","platforms":["linux/amd64"],"repo":"quay.io/bradfordwagner/base:3.0.0-archlinux_latest"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-archlinux_latest             platforms=linux/amd64             target_repo=quay.io/bradfordwagner/ansible             target_tag=${{ github.ref_name }}             is_tag=true
+            v={"os":"arch","platforms":["linux/amd64"],"repo":"quay.io/bradfordwagner/base:3.0.0-archlinux_latest"}
+
+  custom_3:
+    name: base:3.0.0-debian_bookworm
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=tags
+        run: |
+          
+          export v='{"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bookworm"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-debian_bookworm             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=${{ github.ref_name }}             is_tag=true
+            v={"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-debian_bookworm"}
+
+  custom_4:
+    name: base:3.0.0-ubuntu_mantic
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=tags
+        run: |
+          
+          export v='{"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-ubuntu_mantic"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-ubuntu_mantic             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=${{ github.ref_name }}             is_tag=true
+            v={"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-ubuntu_mantic"}
+
+  custom_5:
+    name: base:3.0.0-ubuntu_noble
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout=self
+        uses: actions/checkout@v4
+      - name: task=3.35.1
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.35.1
+      - name: checkout=taskfiles
+        uses: actions/checkout@v4
+        with:
+          path: taskfiles
+          repository: bradfordwagner/taskfiles
+      - name: jq=1.7
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: 1.7
+      - name: qemu
+        uses: docker/setup-qemu-action@v3
+      - name: docker_buildx=v0.13.1
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.13.1
+      - name: login=quay.io
+        run: ${{ secrets.QUAY_LOGIN }}
+      - name: task=tags
+        run: |
+          
+          export v='{"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-ubuntu_noble"}'
+          task -t ./taskfiles/tasks/containers/custom.yml             build             repo=quay.io/bradfordwagner/base:3.0.0-ubuntu_noble             platforms=linux/amd64,linux/arm64             target_repo=quay.io/bradfordwagner/ansible             target_tag=${{ github.ref_name }}             is_tag=true
+            v={"os":"debian","platforms":["linux/amd64","linux/arm64"],"repo":"quay.io/bradfordwagner/base:3.0.0-ubuntu_noble"}
+
