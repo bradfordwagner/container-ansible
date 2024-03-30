@@ -36,9 +36,9 @@ debian_deps() {
 
 ${pkg_installer}_deps
 
-cd
-python3 -m venv myenv
-. myenv/bin/activate
+cd /
+python3 -m venv ansible_env
+. ansible_env/bin/activate
 
 # install pip: https://pip.pypa.io/en/stable/installation/
 wget https://bootstrap.pypa.io/get-pip.py
@@ -50,4 +50,4 @@ ansible_version=9.3.0
 python3 -m pip install ansible==${ansible_version}
 
 # smoketest
-bash -lc ". ${HOME}/myenv/bin/activate && ansible localhost -m ping -c local"
+bash -lc "/ansible_env/bin/ansible localhost -m ping -c local"
