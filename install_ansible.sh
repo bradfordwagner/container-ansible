@@ -1,6 +1,6 @@
-os=${1}
+pkg_installer=${1}
 
-echo os=${os}
+echo pkg_installer=${pkg_installer}
 
 set -ex
 
@@ -34,7 +34,7 @@ debian_deps() {
     wget
 }
 
-${os}_deps
+${pkg_installer}_deps
 
 cd
 python3 -m venv myenv
