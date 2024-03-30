@@ -50,4 +50,4 @@ ansible_version=9.3.0
 python3 -m pip install ansible==${ansible_version}
 
 # smoketest
-bash -lc "ansible localhost -m ping -c local"
+bash -lc "/ansible_env/bin/ansible localhost -m ping -c local"
