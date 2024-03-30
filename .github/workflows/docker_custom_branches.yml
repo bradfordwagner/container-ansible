@@ -58,7 +58,7 @@ jobs:
       - name: task=branches
         run: |
           
-          build=$(echo ${{ toJson(matrix.build) }}'  | jq -rc '.')
+          build=$(echo '${{ toJson(matrix.build) }}'  | jq -rc '.')
           task -t ./taskfiles/tasks/containers/custom.yml \
             build \
             build=${build} \
