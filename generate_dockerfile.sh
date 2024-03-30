@@ -4,4 +4,5 @@ v=$1
 pkg_installer=$(echo ${v} | jq -r '.pkg_installer')
 cat <<FOF
 RUN ./install_ansible.sh ${pkg_installer}
+ENTRYPOINT ["/bin/bash", "-c", ". \${HOME}/myenv/bin/activate && exec \"\$@\""]
 FOF
