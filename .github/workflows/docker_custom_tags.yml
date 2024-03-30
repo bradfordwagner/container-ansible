@@ -59,8 +59,9 @@ jobs:
       - name: task=tags
         run: |
           
+          build=$(echo ${{ toJson(matrix.build) }}'  | jq -rc '.')
           task -t ./taskfiles/tasks/containers/custom.yml \
             build \
-            build='${{ toJson(matrix.build) }}' \
+            build=${build} \
             target_tag=${{ github.ref_name }} \
             is_tag=true
