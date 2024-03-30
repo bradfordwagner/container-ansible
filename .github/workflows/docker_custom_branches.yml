@@ -58,5 +58,8 @@ jobs:
       - name: task=branches
         run: |
           
-          task -t ./taskfiles/tasks/containers/custom.yml             build             build=${{ toJson(matrix.build) }}
-            target_tag=latest             is_tag=false
+          task -t ./taskfiles/tasks/containers/custom.yml \
+            build \
+            build='${{ toJson(matrix.build) }}' \
+            target_tag=latest \
+            is_tag=false
