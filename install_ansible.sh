@@ -13,7 +13,8 @@ alpine_deps() {
     libffi-dev \
     musl-dev \
     python3 \
-    python3-dev
+    python3-dev \
+    git
 }
 
 arch_deps() {
@@ -21,7 +22,8 @@ arch_deps() {
   pacman -S --noconfirm \
     base-devel \
     python \
-    wget
+    wget \
+    git
 }
 
 debian_deps() {
@@ -31,7 +33,8 @@ debian_deps() {
     python3 \
     python3-dev \
     python3-venv \
-    wget
+    wget \
+    git
 }
 
 ${pkg_installer}_deps
