@@ -5,20 +5,20 @@ upstream:
   tag: 3.3.1
 builds:
   - os: alpine_3.18
-    platforms: [linux/amd64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: alpine
   - os: alpine_3.19
-    platforms: [linux/amd64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: alpine
   - os: archlinux_latest
     platforms: [linux/amd64]
     pkg_installer: arch
   - os: debian_bookworm
-    platforms: [linux/amd64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: ubuntu_mantic
-    platforms: [linux/amd64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: ubuntu_noble
-    platforms: [linux/amd64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
