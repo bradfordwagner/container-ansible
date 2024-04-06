@@ -55,3 +55,7 @@ python3 -m pip install ansible==${ansible_version}
 # smoketest
 bash -lc "/ansible_env/bin/ansible localhost -m ping -c local"
 bash -lc "which git"
+
+# run playbook
+ansible-galaxy install -r requirements.yml
+ansible-playbook playbook.yml
