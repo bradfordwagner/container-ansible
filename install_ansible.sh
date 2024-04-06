@@ -49,9 +49,15 @@ python3 get-pip.py
 
 # ansible + ansible core versions
 # https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-community-changelogs
-ansible_version=9.3.0
+ansible_version=9.4.0
 python3 -m pip install ansible==${ansible_version}
 
 # smoketest
 bash -lc "/ansible_env/bin/ansible localhost -m ping -c local"
 bash -lc "which git"
+
+# run playbook
+cd /src
+ansible-galaxy install -r requirements.yml
+ansible-playbook playbook.yml
+rm -rf /src
