@@ -16,6 +16,27 @@ builds:
   - os: debian_bookworm
     platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
+  - os: debian_bookworm-slim
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: debian_bullseye
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: debian_bullseye-slim
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: debian_buster
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: debian_buster-slim
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: ubuntu_focal
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: ubuntu_jammy
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
   - os: ubuntu_mantic
     platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
