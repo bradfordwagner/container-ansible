@@ -2,7 +2,7 @@
 target_repo: ghcr.io/bradfordwagner/ansible
 upstream:
   repo: ghcr.io/bradfordwagner/base
-  tag: 3.4.0
+  tag: 3.4.1
 builds:
   - os: alpine_3.18
     platforms: [linux/amd64, linux/arm64]
@@ -17,21 +17,6 @@ builds:
     platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: debian_bookworm-slim
-    platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
-  - os: debian_bullseye
-    platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
-  - os: debian_bullseye-slim
-    platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
-  - os: debian_buster
-    platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
-  - os: debian_buster-slim
-    platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
-  - os: ubuntu_focal
     platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: ubuntu_jammy
