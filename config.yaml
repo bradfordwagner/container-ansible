@@ -21,10 +21,10 @@ builds:
     pkg_installer: debian
   - os: rockylinux_8
     platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
+    pkg_installer: rhel
   - os: rockylinux_9
     platforms: [linux/amd64, linux/arm64]
-    pkg_installer: debian
+    pkg_installer: rhel
   - os: ubuntu_jammy
     platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
