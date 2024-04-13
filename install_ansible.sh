@@ -44,6 +44,7 @@ rhel_deps() {
     curl \
     findutils \
     gcc \
+    git \
     libffi-devel \
     make \
     openssl-devel \
