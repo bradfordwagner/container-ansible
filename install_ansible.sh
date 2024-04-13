@@ -39,7 +39,7 @@ debian_deps() {
 
 rhel_deps() {
   cd /tmp
-  dnf install -y \
+  dnf install -y --allowerasing \
     bzip2-devel \
     curl \
     findutils \
