@@ -38,14 +38,33 @@ debian_deps() {
 }
 
 rhel_deps() {
-  yum update -y
-  yum install -y \
+  cd /tmp
+  dnf install -y \
+    bzip2-devel \
+    curl \
+    findutils \
     gcc \
-    python3 \
-    python3-devel \
-    python3-virtualenv \
+    libffi-devel \
+    make \
+    openssl-devel \
+    tar \
     wget \
-    git
+    which \
+    xz \
+    zlib-devel
+
+  # maybe we should be installing python for all os
+  python_verson=3.10.14
+  wget https://www.python.org/ftp/python/${python_verson}/Python-${python_verson}.tar.xz
+  xz -d -v Python-${python_verson}.tar.xz
+  tar xf Python-${python_verson}.tar
+  cd Python-${python_verson}
+  ./configure --enable-optimizations
+  make -j 2
+  nproc
+  make altinstall
+  which python3.10
+  python3.10 --version
 }
 
 ${pkg_installer}_deps
