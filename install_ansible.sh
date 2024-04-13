@@ -64,7 +64,9 @@ rhel_deps() {
   nproc
   make altinstall
   which python3.10
+  ln -s /usr/local/bin/python3.10 /usr/local/bin/python3
   python3.10 --version
+  python3 --version
 }
 
 ${pkg_installer}_deps
