@@ -37,6 +37,43 @@ debian_deps() {
     git
 }
 
+rhel_deps() {
+  cd /tmp
+  dnf install -y --allowerasing \
+    bzip2-devel \
+    curl \
+    findutils \
+    gcc \
+    git \
+    libffi-devel \
+    make \
+    openssl-devel \
+    tar \
+    wget \
+    which \
+    xz \
+    zlib-devel
+
+  # maybe we should be installing python for all os
+  python_verson=3.10.14
+  wget https://www.python.org/ftp/python/${python_verson}/Python-${python_verson}.tar.xz
+  xz -d -v Python-${python_verson}.tar.xz
+  tar xf Python-${python_verson}.tar
+  cd Python-${python_verson}
+  ./configure --enable-optimizations
+  make -j 2
+  nproc
+  make altinstall
+  ln -s /usr/local/bin/python3.10 /usr/local/bin/python3
+
+  # smoketest python install
+  python3.10 --version
+  python3 --version
+
+  # cleanup
+  rm -rf /tmp/*
+}
+
 ${pkg_installer}_deps
 
 cd /

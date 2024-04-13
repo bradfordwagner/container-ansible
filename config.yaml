@@ -2,7 +2,7 @@
 target_repo: ghcr.io/bradfordwagner/ansible
 upstream:
   repo: ghcr.io/bradfordwagner/base
-  tag: 3.3.1
+  tag: 3.5.0
 builds:
   - os: alpine_3.18
     platforms: [linux/amd64, linux/arm64]
@@ -14,6 +14,18 @@ builds:
     platforms: [linux/amd64]
     pkg_installer: arch
   - os: debian_bookworm
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: debian_bookworm-slim
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: debian
+  - os: rockylinux_8
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: rhel
+  - os: rockylinux_9
+    platforms: [linux/amd64, linux/arm64]
+    pkg_installer: rhel
+  - os: ubuntu_jammy
     platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: ubuntu_mantic
