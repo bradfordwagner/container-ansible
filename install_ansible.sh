@@ -64,10 +64,14 @@ rhel_deps() {
   make -j 2
   nproc
   make altinstall
-  which python3.10
   ln -s /usr/local/bin/python3.10 /usr/local/bin/python3
+
+  # smoketest python install
   python3.10 --version
   python3 --version
+
+  # cleanup
+  rm -rf /tmp/*
 }
 
 ${pkg_installer}_deps
