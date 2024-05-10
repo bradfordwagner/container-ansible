@@ -5,41 +5,32 @@ upstream:
   tag: 3.5.1
 builds:
   - os: alpine_3.18
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: alpine
   - os: alpine_3.19
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: alpine
   - os: archlinux_latest
     platforms: [linux/amd64]
     pkg_installer: arch
   - os: debian_bookworm
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: debian_bookworm-slim
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: rockylinux_8
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: rhel
   - os: rockylinux_9
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: rhel
   - os: ubuntu_jammy
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: ubuntu_mantic
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
   - os: ubuntu_noble
-    platforms: [linux/amd64]
-    # platforms: [linux/amd64, linux/arm64]
+    platforms: [linux/amd64, linux/arm64]
     pkg_installer: debian
