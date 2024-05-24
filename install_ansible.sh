@@ -1,4 +1,5 @@
 pkg_installer=${1}
+working_dir=${2}
 
 echo pkg_installer=${pkg_installer}
 
@@ -94,7 +95,7 @@ bash -lc "/ansible_env/bin/ansible localhost -m ping -c local"
 bash -lc "which git"
 
 # run playbook
-cd /src
+cd ${working_dir}
 ansible-galaxy install -r requirements.yml
 ansible-playbook playbook.yml
-rm -rf /src
+rm -rf ${working_dir}
