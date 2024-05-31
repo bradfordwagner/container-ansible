@@ -15,6 +15,7 @@ alpine_deps() {
     musl-dev \
     python3 \
     python3-dev \
+    rsync \
     git
 }
 
@@ -24,6 +25,7 @@ arch_deps() {
     base-devel \
     python \
     wget \
+    rsync \
     git
 }
 
@@ -35,6 +37,7 @@ debian_deps() {
     python3-dev \
     python3-venv \
     wget \
+    rsync \
     git
 }
 
@@ -53,6 +56,7 @@ rhel_deps() {
     wget \
     which \
     xz \
+    rsync \
     zlib-devel
 
   # maybe we should be installing python for all os
