@@ -2,6 +2,8 @@ target_repo: ghcr.io/bradfordwagner/ansible
 upstream:
     repo: ghcr.io/bradfordwagner/base
     tag: 3.6.0
+dockerfile: |
+  ./install_ansible.sh ${pkg_installer} /src
 builds:
     - os: alpine_3.18
       archs:
@@ -9,62 +11,62 @@ builds:
         - linux/arm64
       args:
         pkg_installer: alpine
-    - os: alpine_3.19
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: alpine
-    - os: alpine_3.20
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: alpine
-    - os: archlinux_latest
-      archs:
-        - linux/amd64
-      args:
-        pkg_installer: arch
-    - os: debian_bookworm
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: debian
-    - os: debian_bookworm-slim
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: debian
-    - os: rockylinux_8
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: rhel
-    - os: rockylinux_9
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: rhel
-    - os: ubuntu_jammy
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: debian
-    - os: ubuntu_mantic
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: debian
-    - os: ubuntu_noble
-      archs:
-        - linux/amd64
-        - linux/arm64
-      args:
-        pkg_installer: debian
+    # - os: alpine_3.19
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: alpine
+    # - os: alpine_3.20
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: alpine
+    # - os: archlinux_latest
+    #   archs:
+    #     - linux/amd64
+    #   args:
+    #     pkg_installer: arch
+    # - os: debian_bookworm
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: debian
+    # - os: debian_bookworm-slim
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: debian
+    # - os: rockylinux_8
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: rhel
+    # - os: rockylinux_9
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: rhel
+    # - os: ubuntu_jammy
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: debian
+    # - os: ubuntu_mantic
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: debian
+    # - os: ubuntu_noble
+    #   archs:
+    #     - linux/amd64
+    #     - linux/arm64
+    #   args:
+    #     pkg_installer: debian
