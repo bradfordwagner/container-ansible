@@ -25,7 +25,7 @@ jobs:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
     needs: config-yaml
-    name: ${{ matrix.product.index }}:${{ matrix.product.repo }}-${{ matrix.product.tag }} (${{ matrix.product.arch }})
+    name: ${{ matrix.product.index }}:${{ matrix.product.os }} (${{ matrix.product.arch }})
     strategy:
       fail-fast: false
       matrix:
