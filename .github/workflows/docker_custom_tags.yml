@@ -23,7 +23,10 @@ jobs:
           echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/custom call product-json --src=.) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
-    permissions: write-all
+    permissions:
+      contents: read
+      packages: write
+    # permissions: write-all
     needs: config-yaml
     name: ${{ matrix.product.index }}:${{ matrix.product.os }} (${{ matrix.product.arch }})
     strategy:
@@ -42,7 +45,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          logout: false
       - name: dagger=build
         id: config
         run: |
@@ -71,7 +73,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          logout: false
       - name: dagger=manifest
         id: config
         run: |
