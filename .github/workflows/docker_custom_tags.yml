@@ -42,6 +42,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
+          logout: false
       - name: dagger=build
         id: config
         run: |
@@ -70,6 +71,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
+          logout: false
       - name: dagger=manifest
         id: config
         run: |
