@@ -50,32 +50,31 @@ jobs:
             --index=${{ matrix.product.index }} \
             --version=${version} \
             --isDev=false
-  # manifest:
-  #   runs-on: arm64
-  #   permissions: write-all
-  #   needs: builds
-  #   name: manifest-tool
-  #   env:
-  #     actor: ${{ github.actor }}
-  #     token: ${{ github.token }}
-  #   steps:
-  #
+  manifest:
+    runs-on: arm64
+    permissions: write-all
+    needs: builds
+    name: manifest-tool
+    env:
+      actor: ${{ github.actor }}
+      token: ${{ github.token }}
+    steps:
       - uses: actions/checkout@v4
       - name: dagger=0.11.8
         run: |
           curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.11.8 sh
-      #
+      
       - uses: docker/login-action@v3
         name: login=ghcr.io
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      #     - name: dagger=manifest
-  #       id: config
-  #       run: |
-  #         ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/custom call manifest \
-  #           --src=. \
-  #           --version=${version} \
-  #           --actor=env:actor \
-  #           --token=env:token
+      - name: dagger=manifest
+        id: config
+        run: |
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/custom call manifest \
+            --src=. \
+            --version=${version} \
+            --actor=env:actor \
+            --token=env:token
