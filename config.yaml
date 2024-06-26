@@ -1,7 +1,7 @@
 target_repo: ghcr.io/bradfordwagner/ansible
 upstream:
     repo: ghcr.io/bradfordwagner/base
-    tag: 3.6.0
+    tag: 3.6.1
 builds:
     - os: alpine_3.18
       archs:
