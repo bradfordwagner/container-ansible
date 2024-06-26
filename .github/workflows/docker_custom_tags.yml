@@ -20,7 +20,7 @@ jobs:
       - name: dagger=product
         id: config
         run: |
-          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/custom call product-json --src=.) >> $GITHUB_OUTPUT
+          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call product-json --src=.) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
@@ -53,7 +53,7 @@ jobs:
       - name: dagger=build
         id: config
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/custom call build \
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call build \
             --src=. \
             --index=${{ matrix.product.index }} \
             --version=${version} \
@@ -89,7 +89,7 @@ jobs:
       - name: dagger=manifest
         id: config
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/custom call manifest \
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call manifest \
             --src=. \
             --version=${version} \
             --actor=env:actor \
