@@ -20,7 +20,7 @@ jobs:
       - name: dagger=product
         id: config
         run: |
-          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call product-json --src=.) >> $GITHUB_OUTPUT
+          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
