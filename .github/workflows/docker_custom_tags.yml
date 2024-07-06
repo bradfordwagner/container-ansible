@@ -6,8 +6,8 @@ on:
 env:
   version: ${{ github.ref_name }}
 jobs:
-  config-yaml:
-    name: config.yaml
+  product:
+    name: product
     runs-on: arm64
     outputs:
       product: ${{ steps.config.outputs.product }}
@@ -16,20 +16,21 @@ jobs:
       - name: dagger=0.11.8
         run: |
           curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.11.8 sh
-      
       - name: dagger=product
         id: config
         run: |
+          # write your own scoped version of the following since  is not available at this base level
+          # echo product=$(./bin/dagger -m  call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
           echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
-    needs: config-yaml
+    needs: product
     name: ${{ matrix.product.index }}:${{ matrix.product.os }} (${{ matrix.product.arch }})
     strategy:
       fail-fast: false
       matrix:
-        product: ${{ fromJSON(needs.config-yaml.outputs.product) }}
+        product: ${{ fromJSON(needs.product.outputs.product) }}
     steps:
       - uses: actions/checkout@v4
       - name: dagger=0.11.8
@@ -51,7 +52,6 @@ jobs:
           password: ${{ github.token }}
           logout: false
       - name: dagger=build
-        id: config
         run: |
           ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call build \
             --src=. \
