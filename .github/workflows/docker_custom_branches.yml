@@ -1,7 +1,11 @@
 name: docker-custom-branches
 on:
-  - push
-  - workflow_dispatch
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+  workflow_dispatch: {}
 env:
   version: latest
 jobs:
@@ -20,7 +24,7 @@ jobs:
         run: |
           # write your own scoped version of the following since  is not available at this base level
           # echo product=$(./bin/dagger -m  call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
-          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
+          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
@@ -52,7 +56,7 @@ jobs:
           logout: false
       - name: dagger=build
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call build \
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call build \
             --src=. \
             --index=${{ matrix.product.index }} \
             --version=${version} \
@@ -88,7 +92,7 @@ jobs:
       - name: dagger=manifest
         id: config
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@v0.1.0 call manifest \
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call manifest \
             --src=. \
             --version=${version} \
             --actor=env:actor \
