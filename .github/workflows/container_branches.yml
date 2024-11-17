@@ -1,41 +1,44 @@
-name: docker-custom-tags
+name: container-branches
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+  workflow_dispatch: {}
 env:
-  version: ${{ github.ref_name }}
+  version: latest
 jobs:
   product:
     name: product
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       product: ${{ steps.config.outputs.product }}
     steps:
       - uses: actions/checkout@v4
-      - name: dagger=0.13.5
+      - name: dagger=0.15.2
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.13.5 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.15.2 sh
       - name: dagger=product
         id: config
         run: |
-          # write your own scoped version of the following since  is not available at this base level
-          # echo product=$(./bin/dagger -m  call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
-          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
+          # write your own scoped version of the following since https://github.com/bradfordwagner/dagger-container-builds@0.1.1 is not available at this base level
+          set -x
+          echo product=$(./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.1.1 call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
     needs: product
-    name: ${{ matrix.product.index }}:${{ matrix.product.os }} (${{ matrix.product.arch }})
+    name: ${{ matrix.product.display }}
     strategy:
       fail-fast: false
       matrix:
         product: ${{ fromJSON(needs.product.outputs.product) }}
     steps:
       - uses: actions/checkout@v4
-      - name: dagger=0.13.5
+      - name: dagger=0.15.2
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.13.5 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.15.2 sh
       
       # work around other runner's logging out removing credentials
       # https://github.com/docker/login-action/issues/173#issuecomment-1079688020
@@ -52,12 +55,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
       - name: dagger=build
+        id: config
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call build \
+          ./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.1.1 call build \
+            --progress=plain \
             --src=. \
             --index=${{ matrix.product.index }} \
-            --version=${version} \
-            --isDev=false
+            --version=${version}
   manifest:
     runs-on: ubuntu-latest
     permissions: write-all
@@ -68,10 +72,9 @@ jobs:
       token: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-      - name: dagger=0.13.5
+      - name: dagger=0.15.2
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.13.5 sh
-      
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.15.2 sh
       # work around other runner's logging out removing credentials
       # https://github.com/docker/login-action/issues/173#issuecomment-1079688020
       - name: Set DOCKER_CONFIG
@@ -89,7 +92,8 @@ jobs:
       - name: dagger=manifest
         id: config
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call manifest \
+          set -x
+          ./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.1.1 call manifest \
             --src=. \
             --version=${version} \
             --actor=env:actor \
