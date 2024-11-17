@@ -11,20 +11,20 @@ env:
 jobs:
   product:
     name: product
-    runs-on: arm64
+    runs-on: ubuntu-latest
     outputs:
       product: ${{ steps.config.outputs.product }}
     steps:
       - uses: actions/checkout@v4
-      - name: dagger=0.11.8
+      - name: dagger=0.13.6
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.11.8 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.13.6 sh
       - name: dagger=product
         id: config
         run: |
           # write your own scoped version of the following since  is not available at this base level
           # echo product=$(./bin/dagger -m  call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
-          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
+          echo product=$(./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/0.13 call product-json --src=. --version=${version}) >> $GITHUB_OUTPUT
   builds:
     runs-on: ${{ matrix.product.runner }}
     permissions: write-all
@@ -36,15 +36,15 @@ jobs:
         product: ${{ fromJSON(needs.product.outputs.product) }}
     steps:
       - uses: actions/checkout@v4
-      - name: dagger=0.11.8
+      - name: dagger=0.13.6
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.11.8 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.13.6 sh
       
       # work around other runner's logging out removing credentials
       # https://github.com/docker/login-action/issues/173#issuecomment-1079688020
       - name: Set DOCKER_CONFIG
         run: |
-          id=docker_configs/$(uuidgen)
+          id=docker_configs/${RANDOM}
           mkdir -p $HOME/${id}/.docker
           echo "DOCKER_CONFIG=$HOME/${id}/.docker" >> $GITHUB_ENV
       - uses: docker/login-action@v3
@@ -52,11 +52,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
       - name: dagger=build
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call build \
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/0.13 call build \
+            --progress=plain \
             --src=. \
             --index=${{ matrix.product.index }} \
             --version=${version} \
@@ -71,15 +72,15 @@ jobs:
       token: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-      - name: dagger=0.11.8
+      - name: dagger=0.13.6
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.11.8 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.13.6 sh
       
       # work around other runner's logging out removing credentials
       # https://github.com/docker/login-action/issues/173#issuecomment-1079688020
       - name: Set DOCKER_CONFIG
         run: |
-          id=docker_configs/$(uuidgen)
+          id=docker_configs/${RANDOM}
           mkdir -p $HOME/${id}/.docker
           echo "DOCKER_CONFIG=$HOME/${id}/.docker" >> $GITHUB_ENV
       - uses: docker/login-action@v3
@@ -87,12 +88,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
       - name: dagger=manifest
         id: config
         run: |
-          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@main call manifest \
+          ./bin/dagger -m github.com/bradfordwagner/dagger-modules/container_custom@feature/0.13 call manifest \
             --src=. \
             --version=${version} \
             --actor=env:actor \
