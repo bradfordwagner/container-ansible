@@ -60,7 +60,7 @@ rhel_deps() {
     zlib-devel
 
   # maybe we should be installing python for all os
-  python_verson=3.10.14
+  python_verson=3.11.10
   wget https://www.python.org/ftp/python/${python_verson}/Python-${python_verson}.tar.xz
   xz -d -v Python-${python_verson}.tar.xz
   tar xf Python-${python_verson}.tar
@@ -91,7 +91,7 @@ python3 get-pip.py
 
 # ansible + ansible core versions
 # https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-community-changelogs
-ansible_version=9.6.0
+ansible_version=11.0.0
 python3 -m pip install ansible==${ansible_version}
 
 # smoketest
