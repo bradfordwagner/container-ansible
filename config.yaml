@@ -1,7 +1,7 @@
 target_repo: ghcr.io/bradfordwagner/ansible
 upstream:
     repo: ghcr.io/bradfordwagner/base
-    tag: 4.0.0
+    tag: 4.0.1
 builds:
     - os: alpine_3.18
       archs:
@@ -48,12 +48,12 @@ builds:
         - linux/amd64
       args:
         pkg_installer: debian
-    - os: ubuntu_mantic
+    - os: ubuntu_noble
       archs:
         - linux/amd64
       args:
         pkg_installer: debian
-    - os: ubuntu_noble
+    - os: ubuntu_plucky
       archs:
         - linux/amd64
       args:
