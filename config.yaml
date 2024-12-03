@@ -33,11 +33,6 @@ builds:
         - linux/amd64
       args:
         pkg_installer: debian
-    - os: rockylinux_8
-      archs:
-        - linux/amd64
-      args:
-        pkg_installer: rhel
     - os: rockylinux_9
       archs:
         - linux/amd64
