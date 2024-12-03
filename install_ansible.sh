@@ -30,7 +30,7 @@ arch_deps() {
 }
 
 debian_deps() {
-  apt-get update --no-cache
+  apt-get update
   apt-get install -y \
     build-essential \
     python3 \
