@@ -60,7 +60,7 @@ rhel_deps() {
     zlib-devel
 
   # maybe we should be installing python for all os
-  python_verson=3.12.7
+  python_verson=3.12.8
   wget https://www.python.org/ftp/python/${python_verson}/Python-${python_verson}.tar.xz
   xz -d -v Python-${python_verson}.tar.xz
   tar xf Python-${python_verson}.tar
