@@ -2,7 +2,7 @@ target_repo: ghcr.io/bradfordwagner/ansible
 flavor: custom
 upstream:
   repo: ghcr.io/bradfordwagner/base
-  tag: 4.1.0
+  tag: 4.1.1
 builds:
   - os: alpine_3.18
     archs:
