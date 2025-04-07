@@ -96,7 +96,7 @@ python3 get-pip.py
 
 # ansible + ansible core versions
 # https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-community-changelogs
-ansible_version=10.6.0
+ansible_version=11.4.0
 python3 -m pip install ansible==${ansible_version}
 
 # smoketest
