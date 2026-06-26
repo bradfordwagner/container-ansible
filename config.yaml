@@ -2,7 +2,7 @@ target_repo: ghcr.io/bradfordwagner/ansible
 flavor: custom
 upstream:
   repo: ghcr.io/bradfordwagner/base
-  tag: 4.3.1
+  tag: 4.6.0
 builds:
   - os: alpine_3.22
     archs:
@@ -11,6 +11,12 @@ builds:
     args:
       pkg_installer: alpine
   - os: alpine_3.23
+    archs:
+      - linux/amd64
+      - linux/arm64
+    args:
+      pkg_installer: alpine
+  - os: alpine_3.24
     archs:
       - linux/amd64
       - linux/arm64
@@ -33,6 +39,18 @@ builds:
       - linux/arm64
     args:
       pkg_installer: debian
+  - os: debian_forky
+    archs:
+      - linux/amd64
+      - linux/arm64
+    args:
+      pkg_installer: debian
+  - os: debian_forky-slim
+    archs:
+      - linux/amd64
+      - linux/arm64
+    args:
+      pkg_installer: debian
   - os: ubuntu_noble
     archs:
       - linux/amd64
@@ -40,6 +58,12 @@ builds:
     args:
       pkg_installer: debian
   - os: ubuntu_plucky
+    archs:
+      - linux/amd64
+      - linux/arm64
+    args:
+      pkg_installer: debian
+  - os: ubuntu_questing
     archs:
       - linux/amd64
       - linux/arm64
