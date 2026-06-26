@@ -21,18 +21,6 @@ builds:
       - linux/amd64
     args:
       pkg_installer: arch
-  - os: debian_bookworm
-    archs:
-      - linux/amd64
-      - linux/arm64
-    args:
-      pkg_installer: debian
-  - os: debian_bookworm-slim
-    archs:
-      - linux/amd64
-      - linux/arm64
-    args:
-      pkg_installer: debian
   - os: debian_trixie
     archs:
       - linux/amd64
