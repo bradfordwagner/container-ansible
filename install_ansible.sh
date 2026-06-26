@@ -65,7 +65,7 @@ rhel_deps() {
 
   # maybe we should be installing python for all os
   # https://www.python.org/doc/versions/
-  python_verson=3.12.12
+  python_verson=3.12.13
   wget https://www.python.org/ftp/python/${python_verson}/Python-${python_verson}.tar.xz
   xz -d -v Python-${python_verson}.tar.xz
   tar xf Python-${python_verson}.tar
@@ -96,7 +96,7 @@ python3 get-pip.py
 
 # ansible + ansible core versions
 # https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-community-changelogs
-ansible_version=12.3.0
+ansible_version=14.0.0
 python3 -m pip install ansible==${ansible_version}
 
 # smoketest
