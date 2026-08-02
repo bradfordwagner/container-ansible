@@ -32,8 +32,7 @@ Builds multi-arch Ansible container images on top of `ghcr.io/bradfordwagner/bas
 | debian_forky | 3.13 | 14 |
 | debian_forky-slim | 3.13 | 14 |
 | ubuntu_noble | 3.12 | 14 |
-| ubuntu_plucky | 3.13 | 14 |
-| ubuntu_questing | 3.13 | 14 |
+| ubuntu_resolute | 3.13 | 14 |
 
 `debian_bookworm` and `debian_bookworm-slim` are intentionally excluded — their system Python (3.11) does not meet Ansible 14's `>=3.12` requirement.
 

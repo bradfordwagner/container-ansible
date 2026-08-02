@@ -2,7 +2,7 @@ target_repo: ghcr.io/bradfordwagner/ansible
 flavor: custom
 upstream:
   repo: ghcr.io/bradfordwagner/base
-  tag: 4.6.0
+  tag: 4.7.0
 builds:
   - os: alpine_3.22
     archs:
@@ -57,13 +57,7 @@ builds:
       - linux/arm64
     args:
       pkg_installer: debian
-  - os: ubuntu_plucky
-    archs:
-      - linux/amd64
-      - linux/arm64
-    args:
-      pkg_installer: debian
-  - os: ubuntu_questing
+  - os: ubuntu_resolute
     archs:
       - linux/amd64
       - linux/arm64
