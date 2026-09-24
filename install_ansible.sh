@@ -39,6 +39,10 @@ debian_deps() {
     wget \
     rsync \
     git
+  # Ship no package index: a baked one names exact .deb versions that Debian
+  # prunes from the pool on the next point release, so downstream installs 404
+  # until this image is rebuilt. Consumers apt-get update against a live mirror.
+  rm -rf /var/lib/apt/lists/*
 }
 
 rhel_deps() {
