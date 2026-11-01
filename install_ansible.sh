@@ -91,17 +91,19 @@ rhel_deps() {
 ${pkg_installer}_deps
 
 cd /
-python3 -m venv ansible_env
-. ansible_env/bin/activate
+uv_version=0.13.6
+uv_dir=$(mktemp -d)
+wget -qO- https://github.com/astral-sh/uv/releases/download/${uv_version}/uv-$(uname -m)-unknown-linux-musl.tar.gz | tar -xz -C ${uv_dir} --strip-components=1
+export PATH=${uv_dir}:${PATH}
 
-# install pip: https://pip.pypa.io/en/stable/installation/
-wget https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py
+uv venv /ansible_env ${UV_PYTHON:+--python ${UV_PYTHON}} --python-preference ${UV_PYTHON_PREFERENCE:-only-system}
+. ansible_env/bin/activate
 
 # ansible + ansible core versions
 # https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-community-changelogs
 ansible_version=14.2.0
-python3 -m pip install ansible==${ansible_version}
+uv pip install ansible==${ansible_version}
+rm -rf ${uv_dir}
 
 # smoketest
 bash -lc "/ansible_env/bin/ansible localhost -m ping -c local"
