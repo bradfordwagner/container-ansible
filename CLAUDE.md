@@ -7,34 +7,32 @@ Builds multi-arch Ansible container images on top of `ghcr.io/bradfordwagner/bas
 | File | Purpose |
 |---|---|
 | `config.yaml` | OS targets, archs, upstream base tag |
-| `install_ansible.sh` | Installs Ansible into a venv at `/ansible_env` |
+| `install_ansible.sh` | Installs OS build deps, then `uv sync --frozen` into a venv at `/ansible_env` |
+| `pyproject.toml` | `ansible` pin and `requires-python` range |
+| `uv.lock` | Locked `ansible` + `ansible-core` + transitive deps |
+| `.python-version` | Exact CPython uv downloads into `/opt/python` |
 | `Dockerfile` | Thin wrapper — copies src, runs install script, sets PATH |
 | `playbook.yml` | Smoke-tests binaries and runs `andrewrothstein.ca_certs` role |
 | `requirements.yml` | Ansible Galaxy deps (`andrewrothstein.ca_certs`) |
 
+## Python
+
+uv downloads one standalone CPython (`.python-version`) on every OS, so the distro Python is never used and is not installed. The pin must sit inside the **control node** Python range of the `ansible-core` that the pinned `ansible` package depends on, per the [ansible-core support matrix](https://docs.ansible.com/projects/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix). Every build runs against `localhost`, so control and target Python are the same interpreter.
+
+| ansible | ansible-core | Control node Python | ansible-core EOL |
+|---|---|---|---|
+| 14 | 2.21 | 3.12 - 3.14 | Nov 2027 |
+| 15 | 2.22 | 3.13 - 3.15 | May 2028 |
+
+Pin 3.13: it is inside both rows, so the Ansible 14 to 15 upgrade needs no Python change. Keep `requires-python` in `pyproject.toml` equal to the control range of the current row.
+
 ## Upgrading Ansible
 
-1. Update `ansible_version` in `install_ansible.sh`
-2. Update `python_verson` (for RHEL builds) in `install_ansible.sh`
-3. Check OS Python compatibility — Ansible 14+ requires Python >= 3.12
-
-## OS Python compatibility
-
-| OS | Python | Min Ansible |
-|---|---|---|
-| alpine_3.22 | 3.12 | 14 |
-| alpine_3.23 | 3.12 | 14 |
-| alpine_3.24 | 3.14 | 14 |
-| archlinux_latest | 3.13+ (rolling) | 14 |
-| debian_bookworm | 3.11 | 12 only — excluded (Python < 3.12) |
-| debian_trixie | 3.13 | 14 |
-| debian_trixie-slim | 3.13 | 14 |
-| debian_forky | 3.13 | 14 |
-| debian_forky-slim | 3.13 | 14 |
-| ubuntu_noble | 3.12 | 14 |
-| ubuntu_resolute | 3.13 | 14 |
-
-`debian_bookworm` and `debian_bookworm-slim` are intentionally excluded — their system Python (3.11) does not meet Ansible 14's `>=3.12` requirement.
+1. Look up the new `ansible-core` and its control node Python range in the matrix above
+2. Update `ansible==` in `pyproject.toml`, widen or narrow `requires-python` to that range
+3. Update `.python-version` if the pinned Python falls outside the range
+4. Run `uv lock` and commit `uv.lock`
+5. Update the table above
 
 ## CI
 
