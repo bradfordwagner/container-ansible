@@ -3,5 +3,35 @@
   "extends": [
     "github>bradfordwagner/renovate:container-image",
     "helpers:pinGitHubActionDigests"
+  ],
+  "packageRules": [
+    {
+      "description": "Cap python at the highest minor the current ansible major supports; ansible-python.mjs keeps this in sync",
+      "matchPackageNames": [
+        "python"
+      ],
+      "allowedVersions": "<3.15"
+    },
+    {
+      "description": "Keep requires-python, .python-version and the python cap in sync with the ansible major (.github/renovate/compat.json)",
+      "matchManagers": [
+        "pep621"
+      ],
+      "matchPackageNames": [
+        "ansible"
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "node .github/renovate/ansible-python.mjs {{{newVersion}}}"
+        ],
+        "fileFilters": [
+          "pyproject.toml",
+          "uv.lock",
+          ".python-version",
+          "renovate.json"
+        ],
+        "executionMode": "update"
+      }
+    }
   ]
 }
