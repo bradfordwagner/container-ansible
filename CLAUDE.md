@@ -24,7 +24,7 @@ uv downloads one standalone CPython (`.python-version`) on every OS, so the dist
 | 14 | 2.21 | 3.12 - 3.14 | Nov 2027 |
 | 15 | 2.22 | 3.13 - 3.15 | May 2028 |
 
-Pin 3.13: it is inside both rows, so the Ansible 14 to 15 upgrade needs no Python change. Keep `requires-python` in `pyproject.toml` equal to the control range of the current row.
+Pin 3.14: it is inside both rows, so the Ansible 14 to 15 upgrade needs no Python change. Keep `requires-python` in `pyproject.toml` equal to the control range of the current row.
 
 ## Upgrading Ansible
 

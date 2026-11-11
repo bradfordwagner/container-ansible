@@ -3,5 +3,12 @@
   "extends": [
     "github>bradfordwagner/renovate:container-image",
     "helpers:pinGitHubActionDigests"
+  ],
+  "packageRules": [
+    {
+      "description": "ansible 14 (ansible-core 2.21) supports Python up to 3.14; lift this cap when moving to ansible 15",
+      "matchPackageNames": ["python"],
+      "allowedVersions": "<3.15"
+    }
   ]
 }
