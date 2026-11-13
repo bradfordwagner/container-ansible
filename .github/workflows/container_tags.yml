@@ -4,6 +4,7 @@ on:
     tags:
       - '*'
 env:
+  DAGGER_VERSION: 0.21.11
   version: ${{ github.ref_name }}
 jobs:
   product:
@@ -13,9 +14,9 @@ jobs:
       product: ${{ steps.config.outputs.product }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: dagger=0.21.11
+      - name: dagger=${{ env.DAGGER_VERSION }}
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.11 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | sh
       - name: dagger=product
         id: config
         run: |
@@ -23,7 +24,8 @@ jobs:
           set -x
           echo product=$(./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.4.1 call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
   builds:
-    runs-on: ${{ matrix.product.runner }}
+    # arm64 goes to the cicd ARC runners while they are up (ARC_UP), else the hosted arm runner.
+    runs-on: ${{ vars.ARC_UP == 'true' && matrix.product.runner == 'ubuntu-24.04-arm' && 'arc-arm64' || matrix.product.runner }}
     permissions: write-all
     needs: product
     name: ${{ matrix.product.display }}
@@ -33,9 +35,9 @@ jobs:
         product: ${{ fromJSON(needs.product.outputs.product) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: dagger=0.21.11
+      - name: dagger=${{ env.DAGGER_VERSION }}
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.11 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | sh
       
       # work around other runner's logging out removing credentials
       # https://github.com/docker/login-action/issues/173#issuecomment-1079688020
@@ -53,6 +55,9 @@ jobs:
           logout: false
       - name: dagger=build
         id: config
+        env:
+          # on ARC, pull the engine through the hl_k3d ghcr cache
+          _EXPERIMENTAL_DAGGER_RUNNER_HOST: ${{ vars.ARC_UP == 'true' && matrix.product.runner == 'ubuntu-24.04-arm' && format('docker-image://host.k3d.internal:5002/dagger/engine:v{0}', env.DAGGER_VERSION) || '' }}
         run: |
           ./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.4.1 call build \
             --progress=plain \
@@ -69,9 +74,9 @@ jobs:
       token: ${{ github.token }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: dagger=0.21.11
+      - name: dagger=${{ env.DAGGER_VERSION }}
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.11 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | sh
       # work around other runner's logging out removing credentials
       # https://github.com/docker/login-action/issues/173#issuecomment-1079688020
       - name: Set DOCKER_CONFIG
