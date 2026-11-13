@@ -27,8 +27,8 @@ jobs:
           set -x
           echo product=$(./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.4.1 call product-json --src=. --version=${{ env.version }}) >> $GITHUB_OUTPUT
   builds:
-    # arm64 goes to the cicd ARC runners while they are up (ARC_UP), else the hosted arm runner.
-    runs-on: ${{ vars.ARC_UP == 'true' && matrix.product.runner == 'ubuntu-24.04-arm' && 'arc-arm64' || matrix.product.runner }}
+    # arm64 goes to the cicd ARC runners while any Mac serves them (ARC_HOSTS), else the hosted arm runner.
+    runs-on: ${{ vars.ARC_HOSTS != '' && matrix.product.runner == 'ubuntu-24.04-arm' && 'arc-arm64' || matrix.product.runner }}
     permissions: write-all
     needs: product
     name: ${{ matrix.product.display }}
@@ -60,7 +60,7 @@ jobs:
         id: config
         env:
           # on ARC, pull the engine through the hl_k3d ghcr cache
-          _EXPERIMENTAL_DAGGER_RUNNER_HOST: ${{ vars.ARC_UP == 'true' && matrix.product.runner == 'ubuntu-24.04-arm' && format('docker-image://host.k3d.internal:5002/dagger/engine:v{0}', env.DAGGER_VERSION) || '' }}
+          _EXPERIMENTAL_DAGGER_RUNNER_HOST: ${{ vars.ARC_HOSTS != '' && matrix.product.runner == 'ubuntu-24.04-arm' && format('docker-image://host.k3d.internal:5002/dagger/engine:v{0}', env.DAGGER_VERSION) || '' }}
         run: |
           ./bin/dagger -m https://github.com/bradfordwagner/dagger-container-builds@0.4.1 call build \
             --progress=plain \
