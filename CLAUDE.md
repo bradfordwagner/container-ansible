@@ -1,6 +1,6 @@
 # bradfordwagner/container-ansible
 
-Builds multi-arch Ansible container images on top of `ghcr.io/bradfordwagner/base` using Dagger.
+Builds multi-arch Ansible container images on top of `ghcr.io/bradfordwagner/base` with docker buildx.
 
 ## Key files
 
@@ -48,5 +48,5 @@ By hand, if the script did not run:
 
 - **Branch pushes** → `container-branches.yml` builds with `version=latest`
 - **Tag pushes** → `container-tags.yml` builds and pushes versioned + manifest
-- Uses `dagger-container-builds@0.1.1` module via Dagger 0.15.2
+- Both call `bradfordwagner/gh-template-lib/.github/workflows/custom.yml` (from gh-template-custom-image)
 - Watch runs: `gh run list --branch <branch> --limit 5`
