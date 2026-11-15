@@ -33,5 +33,19 @@
         "executionMode": "update"
       }
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "uv release pinned as uv_version in install_ansible.sh",
+      "managerFilePatterns": [
+        "/^install_ansible\\.sh$/"
+      ],
+      "matchStrings": [
+        "uv_version=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "astral-sh/uv",
+      "datasourceTemplate": "github-releases"
+    }
   ]
 }
