@@ -10,7 +10,7 @@
       "matchPackageNames": [
         "python"
       ],
-      "allowedVersions": "<3.15"
+      "allowedVersions": "<3.16"
     },
     {
       "description": "Keep requires-python, .python-version and the python cap in sync with the ansible major (.github/renovate/compat.json)",
