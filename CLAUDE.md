@@ -36,6 +36,8 @@ Renovate runs `ansible-python.mjs` after it bumps `ansible` (see `postUpgradeTas
 
 For a new major, add its row to `compat.json` and the table above **before** merging the Renovate PR. Never push to the `renovate/*` branch: close the PR and make the change on a normal branch. Renovate does not touch `requires-python`.
 
+Renovate runs `uv lock` **before** the postUpgradeTask, so the lock step sees the old `requires-python`. If that range does not satisfy the new `ansible`'s `Python>=` bound, `uv lock` fails (`renovate/artifacts` goes red) and the script never gets to fix it. So while a major is pending, keep `requires-python` at the overlap of the current and next ansible rows. Today that is `>=3.13,<3.15` (14: 3.12 - 3.14, 15: 3.13 - 3.15). The script widens it to the new row on merge.
+
 By hand, if the script did not run:
 
 1. Look up the new `ansible-core` and its control node Python range in the matrix above
