@@ -47,7 +47,7 @@ export UV_PYTHON_PREFERENCE=only-managed
 export UV_PROJECT_ENVIRONMENT=/ansible_env
 export UV_NO_CACHE=1
 
-uv_version=0.13.9
+uv_version=0.13.10
 uv_dir=$(mktemp -d)
 wget -qO- https://github.com/astral-sh/uv/releases/download/${uv_version}/uv-$(uname -m)-unknown-linux-musl.tar.gz | tar -xz -C ${uv_dir} --strip-components=1
 
